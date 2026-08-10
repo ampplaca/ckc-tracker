@@ -449,9 +449,12 @@ function renderOL(){
   document.getElementById('ol-current').textContent = currentOL;
   const rot = document.getElementById('ol-rotation');
   rot.innerHTML = OL_ORDER.map(a =>
-    `<span class="ol-chip ${a===currentOL?'current':'other'}">${a}</span>`
+    `<span class="ol-chip ${a===currentOL?'current':'other'}" 
+      ${IS_EDITOR ? `onclick="setOL('${a}')" style="cursor:pointer" title="Set ${a} as current OL"` : ''}
+    >${a}</span>`
   ).join('');
-  if(IS_EDITOR) document.getElementById('ol-select').style.display = 'block';
+  // Hide dropdown since chips are now clickable
+  document.getElementById('ol-select').style.display = 'none';
 }
 function setOL(val){
   if(!val) return;
@@ -580,7 +583,34 @@ function renderEvents(){
     const d=document.createElement("div");d.className="event-date";d.style.margin="0";d.textContent=e.date;dateRow.appendChild(d);
     if(IS_EDITOR){const eb=document.createElement("button");eb.className="edit-btn";eb.textContent="✏ Edit";eb.onclick=()=>openEditModal(e);dateRow.appendChild(eb);}
     card.appendChild(dateRow);
-    if(e.org){const o=document.createElement("div");o.className="event-org";o.textContent="Organized by "+e.org;card.appendChild(o);}
+    if(e.org||IS_EDITOR){
+      const o=document.createElement("div");o.className="event-org";
+      if(IS_EDITOR){
+        const orgWrap=document.createElement('span');
+        orgWrap.style.cssText='display:inline-flex;align-items:center;gap:6px';
+        const orgLabel=document.createElement('span');
+        orgLabel.textContent=e.org?'Organized by '+e.org:'+ Set organizer';
+        orgLabel.style.cssText=e.org?'':'color:rgba(0,200,80,0.3);font-style:italic;cursor:pointer';
+        const orgSelect=document.createElement('select');
+        orgSelect.style.cssText='display:none;background:rgba(0,0,0,0.5);border:1px solid rgba(0,200,80,0.3);border-radius:5px;color:#c8e6d2;font-size:11px;padding:2px 6px;cursor:pointer';
+        orgSelect.innerHTML='<option value="">— select —</option>'+OL_ORDER.map(a=>`<option value="${a}" ${e.org===a?'selected':''}>${a}</option>`).join('');
+        orgLabel.onclick=()=>{orgSelect.style.display=orgSelect.style.display==='none'?'inline-block':'none';};
+        orgSelect.onchange=async()=>{
+          const newOrg=orgSelect.value;
+          e.org=newOrg;
+          orgLabel.textContent=newOrg?'Organized by '+newOrg:'+ Set organizer';
+          orgSelect.style.display='none';
+          if(GOOGLE_TOKEN && newOrg){
+            // Append org update note to sheet
+          }
+        };
+        orgWrap.appendChild(orgLabel);
+        orgWrap.appendChild(orgSelect);
+        o.appendChild(orgWrap);
+      } else {
+        o.textContent=e.org?'Organized by '+e.org:'';
+      }
+      card.appendChild(o);}
     if(e.lost){
       const b=document.createElement("div");b.className="lost-banner";b.textContent="We lost stump — no rewards given";card.appendChild(b);
     }else{
