@@ -461,8 +461,6 @@ function renderOL(){
     rot.appendChild(chip);
   });
   document.getElementById('ol-select').style.display = 'none';
-}e chips are now clickable
-  document.getElementById('ol-select').style.display = 'none';
 }
 async function setOL(val){
   if(!val) return;
@@ -516,12 +514,12 @@ async function loadSheet(){
   try{
     const evUrl=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(EVENTS_SHEET)}?key=${API_KEY}`;
     const rwUrl=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(REWARDS_SHEET)}?key=${API_KEY}`;
-    const settingsUrl=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/'Current OL'!A1?key=${API_KEY}`;
-    const [evRes,rwRes,settingsRes]=await Promise.all([fetch(evUrl),fetch(rwUrl),fetch(settingsUrl)]);
-    const [evData,rwData,settingsData]=await Promise.all([evRes.json(),rwRes.json(),settingsRes.json()]);
+    const olUrl=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent('Current OL')}!A1?key=${API_KEY}`;
+    const [evRes,rwRes,olRes]=await Promise.all([fetch(evUrl),fetch(rwUrl),fetch(olUrl)]);
+    const [evData,rwData,olData]=await Promise.all([evRes.json(),rwRes.json(),olRes.json()]);
     if(evData.error) throw new Error(evData.error.message);
     // Load OL from sheet if available
-    const sheetOL = settingsData.values && settingsData.values[0] && settingsData.values[0][0];
+    const sheetOL = olData.values && olData.values[0] && olData.values[0][0];
     if(sheetOL && OL_ORDER.includes(sheetOL)){
       currentOL = sheetOL;
       localStorage.setItem('ckc_ol', sheetOL);
