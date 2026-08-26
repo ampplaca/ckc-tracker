@@ -456,11 +456,19 @@ function renderOL(){
   // Hide dropdown since chips are now clickable
   document.getElementById('ol-select').style.display = 'none';
 }
-function setOL(val){
+async function setOL(val){
   if(!val) return;
   currentOL = val;
   localStorage.setItem('ckc_ol', val);
   renderOL();
+  // Save to sheet if connected
+  if(GOOGLE_TOKEN){
+    try{
+      // Write to a Settings tab, cell A1 = current OL
+      const url=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Settings!A1?valueInputOption=USER_ENTERED`;
+      await fetch(url,{method:'PUT',headers:{'Authorization':'Bearer '+GOOGLE_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({values:[[val]]})});
+    }catch(e){ console.log('OL save error:', e); }
+  }
 }
 
 // ── EDITOR LOGIN ──────────────────────────────────────────────────────────────
@@ -500,9 +508,16 @@ async function loadSheet(){
   try{
     const evUrl=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(EVENTS_SHEET)}?key=${API_KEY}`;
     const rwUrl=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(REWARDS_SHEET)}?key=${API_KEY}`;
-    const [evRes,rwRes]=await Promise.all([fetch(evUrl),fetch(rwUrl)]);
-    const [evData,rwData]=await Promise.all([evRes.json(),rwRes.json()]);
+    const settingsUrl=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Settings!A1?key=${API_KEY}`;
+    const [evRes,rwRes,settingsRes]=await Promise.all([fetch(evUrl),fetch(rwUrl),fetch(settingsUrl)]);
+    const [evData,rwData,settingsData]=await Promise.all([evRes.json(),rwRes.json(),settingsRes.json()]);
     if(evData.error) throw new Error(evData.error.message);
+    // Load OL from sheet if available
+    const sheetOL = settingsData.values && settingsData.values[0] && settingsData.values[0][0];
+    if(sheetOL && OL_ORDER.includes(sheetOL)){
+      currentOL = sheetOL;
+      localStorage.setItem('ckc_ol', sheetOL);
+    }
     const evRows=(evData.values||[]).slice(2), rwRows=(rwData.values||[]).slice(2);
     const evMap={};
     evRows.forEach(r=>{
