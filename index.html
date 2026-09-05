@@ -278,6 +278,7 @@ body{background:#050e0a;min-height:100vh;font-family:'Lato',sans-serif;padding:0
       <div class="tabs">
         <button class="tab active" onclick="switchTab('events',this)">Events</button>
         <button class="tab" onclick="switchTab('players',this)">Players</button>
+        <button class="tab" onclick="switchTab('stats',this)">Stats</button>
         <button class="tab" id="add-tab" onclick="switchTab('add',this)" style="display:none">Add Event</button>
       </div>
 
@@ -292,6 +293,10 @@ body{background:#050e0a;min-height:100vh;font-family:'Lato',sans-serif;padding:0
       <div class="section" id="sec-players">
         <div class="search-row"><input type="text" placeholder="Search player..." id="player-search" oninput="renderPlayer()"></div>
         <div id="player-view"></div>
+      </div>
+
+      <div class="section" id="sec-stats">
+        <div id="stats-list"></div>
       </div>
 
       <div class="section" id="sec-add">
@@ -696,15 +701,124 @@ function switchTab(name,btn){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById("sec-"+name).classList.add("active");
   if(name==="players")renderPlayer();
+  if(name==="stats")renderStats();
 }
-function switchPage(name,btn){
-  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById("page-"+name).classList.add("active");
+
+function renderStats(){
+  const el = document.getElementById('stats-list');
+  el.innerHTML = '<div style="font-size:13px;color:rgba(200,230,210,0.3);text-align:center;padding:20px">Loading stats...</div>';
+
+  const rosterUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Roster?key=${API_KEY}`;
+  const attendUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Attendance?key=${API_KEY}`;
+
+  Promise.all([fetch(rosterUrl), fetch(attendUrl)])
+    .then(([rRes, aRes]) => Promise.all([rRes.json(), aRes.json()]))
+    .then(([rData, aData]) => {
+      if(rData.error){ el.innerHTML = '<div style="color:#f85149;padding:20px;font-size:13px">Could not load Roster tab.</div>'; return; }
+
+      const rosterRows = rData.values || [];
+      const attendRows = aData.values || [];
+
+      // Build maps from Roster
+      // Column A = in-game name, Column B = main account (if alt), Column C = nickname/shortform
+      const altMap = {};     // altName.lower -> mainName
+      const nicknameMap = {}; // nickname.lower -> mainName
+      const mainPlayers = [];
+
+      rosterRows.forEach(row => {
+        const name = (row[0]||'').trim();
+        const main = (row[1]||'').trim();
+        const nickname = (row[2]||'').trim();
+        if(!name) return;
+        const mainName = main || name; // if no main specified, this IS the main
+        if(main){
+          altMap[name.toLowerCase()] = main; // this is an alt
+        } else {
+          mainPlayers.push(name); // this is a main account
+        }
+        // Register nickname -> main
+        if(nickname){
+          nicknameMap[nickname.toLowerCase()] = mainName;
+        }
+        // Also register the in-game name itself -> main (for alts)
+        if(main){
+          altMap[name.toLowerCase()] = main;
+        }
+      });
+
+      function resolveMain(name){
+        const key = name.toLowerCase();
+        // Check nickname first, then alt map, then return as-is
+        return nicknameMap[key] || altMap[key] || name;
+      }
+
+      // Attendance per main
+      const attendanceMap = {};
+      if(attendRows.length > 0){
+        const stumpDates = attendRows[0].slice(1);
+        for(let r=1;r<attendRows.length;r++){
+          const row = attendRows[r];
+          const rawName = (row[0]||'').trim();
+          if(!rawName) continue;
+          const main = resolveMain(rawName);
+          const key = main.toLowerCase();
+          if(!attendanceMap[key]) attendanceMap[key] = new Set();
+          stumpDates.forEach((date,i) => { if((row[i+1]||'').trim()) attendanceMap[key].add(date); });
+        }
+      }
+
+      // Box history per main
+      const boxMap = {};
+      EVENTS.forEach(e => {
+        if(e.lost) return;
+        [...e.boxes.map(b=>b.who), ...e.titles].forEach(who => {
+          const main = resolveMain(who);
+          const key = main.toLowerCase();
+          if(!boxMap[key]) boxMap[key] = {display: main, dates: []};
+          if(!boxMap[key].dates.includes(e.date)) boxMap[key].dates.push(e.date);
+        });
+      });
+
+      const stats = mainPlayers.map(name => {
+        const key = name.toLowerCase();
+        const attended = attendanceMap[key] ? [...attendanceMap[key]] : [];
+        const boxes = boxMap[key];
+        const totalBoxes = boxes ? boxes.dates.length : 0;
+        const lastBoxDate = boxes && boxes.dates.length
+          ? boxes.dates.reduce((l,d) => new Date(d)>new Date(l)?d:l, boxes.dates[0]) : null;
+        const stumpsSinceBox = lastBoxDate
+          ? attended.filter(d => new Date(d)>new Date(lastBoxDate)).length
+          : attended.length;
+        return {name, totalBoxes, totalAttended: attended.length, stumpsSinceBox};
+      });
+
+      stats.sort((a,b) => b.stumpsSinceBox - a.stumpsSinceBox);
+      el.innerHTML = '';
+
+      const header = document.createElement('div');
+      header.style.cssText = 'display:grid;grid-template-columns:1fr 70px 80px 160px;gap:8px;padding:8px 14px;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(0,200,80,0.4);border-bottom:1px solid rgba(0,200,80,0.1);margin-bottom:4px';
+      header.innerHTML = '<span>Player</span><span style="text-align:center">Boxes</span><span style="text-align:center">Attended</span><span style="text-align:center">Stumps w/o Box</span>';
+      el.appendChild(header);
+
+      stats.forEach(p => {
+        let color = '#5dde8a';
+        if(p.stumpsSinceBox >= 4) color = '#E24B4A';
+        else if(p.stumpsSinceBox >= 2) color = '#EF9F27';
+        const text = p.stumpsSinceBox === 0 ? (p.totalBoxes > 0 ? 'Just received' : 'No box yet')
+          : p.stumpsSinceBox === 1 ? '1 stump ago' : p.stumpsSinceBox + ' stumps ago';
+        const row = document.createElement('div');
+        row.style.cssText = 'display:grid;grid-template-columns:1fr 70px 80px 160px;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(0,200,80,0.06);align-items:center;cursor:pointer';
+        row.innerHTML = `<span style="font-size:13px;color:#e8f5ec;font-weight:600">${p.name}</span><span style="text-align:center;font-family:'Cinzel',serif;font-size:13px;color:#5dde8a">${p.totalBoxes}</span><span style="text-align:center;font-family:'Cinzel',serif;font-size:13px;color:#5dde8a">${p.totalAttended}</span><span style="text-align:center;font-size:13px;font-weight:700;color:${color}">${text}</span>`;
+        row.onclick = () => lookupPlayer(p.name);
+        row.onmouseover = () => row.style.background = 'rgba(0,200,80,0.04)';
+        row.onmouseout = () => row.style.background = '';
+        el.appendChild(row);
+      });
+
+      if(!stats.length) el.innerHTML = '<div style="color:rgba(200,230,210,0.3);padding:20px;font-size:13px;text-align:center">No data yet — fill in Roster and Attendance tabs.</div>';
+    })
+    .catch(e => { el.innerHTML = `<div style="color:#f85149;padding:20px;font-size:13px">Error: ${e.message}</div>`; });
 }
-function showAdd(){ if(!IS_EDITOR)return; switchTab("add",document.getElementById("add-tab")); }
-function cancelAdd(){ switchTab("events",document.querySelectorAll(".tab")[0]); }
 function switchSDTab(t){}
 
 // ── LOST TOGGLE ───────────────────────────────────────────────────────────────
