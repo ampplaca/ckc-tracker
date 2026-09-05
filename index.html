@@ -763,14 +763,18 @@ function renderStats(){
           const main = resolveMain(rawName);
           const key = main.toLowerCase();
           if(!attendanceMap[key]) attendanceMap[key] = new Set();
-          stumpDates.forEach((date,i) => { if((row[i+1]||'').trim()) attendanceMap[key].add(date); });
+          stumpDates.forEach((date,i) => { const val=(row[i+1]||'').trim().toUpperCase(); if(val==='TRUE'||val==='1'||val==='YES'||val==='✓') attendanceMap[key].add(date); });
         }
       }
 
-      // Box history per main
+      // Only count boxes/titles from STATS_START_DATE onwards
+      const STATS_START = new Date('September 5, 2026');
+
+      // Box history per main (from start date only)
       const boxMap = {};
       EVENTS.forEach(e => {
         if(e.lost) return;
+        if(new Date(e.date) < STATS_START) return; // skip old events
         [...e.boxes.map(b=>b.who), ...e.titles].forEach(who => {
           const main = resolveMain(who);
           const key = main.toLowerCase();
@@ -778,6 +782,9 @@ function renderStats(){
           if(!boxMap[key].dates.includes(e.date)) boxMap[key].dates.push(e.date);
         });
       });
+
+      // Last box date for "stumps since" — also from start date only
+      // (if no box since start, stumpsSinceBox = all attended stumps)
 
       const stats = mainPlayers.map(name => {
         const key = name.toLowerCase();
@@ -794,6 +801,11 @@ function renderStats(){
 
       stats.sort((a,b) => b.stumpsSinceBox - a.stumpsSinceBox);
       el.innerHTML = '';
+
+      const note = document.createElement('div');
+      note.style.cssText = 'font-size:11px;color:rgba(0,200,80,0.35);letter-spacing:1px;margin-bottom:12px;padding:8px 14px;background:rgba(0,200,80,0.05);border-radius:8px;border:1px solid rgba(0,200,80,0.1)';
+      note.textContent = '📅 Tracking started September 5, 2026';
+      el.appendChild(note);
 
       const header = document.createElement('div');
       header.style.cssText = 'display:grid;grid-template-columns:1fr 70px 80px 160px;gap:8px;padding:8px 14px;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(0,200,80,0.4);border-bottom:1px solid rgba(0,200,80,0.1);margin-bottom:4px';
