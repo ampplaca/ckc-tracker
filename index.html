@@ -820,7 +820,7 @@ function renderStats(){
           : p.stumpsSinceBox === 1 ? '1 stump ago' : p.stumpsSinceBox + ' stumps ago';
         const row = document.createElement('div');
         row.style.cssText = 'display:grid;grid-template-columns:1fr 50px 60px 1fr;gap:6px;padding:10px 12px;border-bottom:1px solid rgba(0,200,80,0.06);align-items:center;cursor:pointer';
-        row.innerHTML = `<span style="font-size:13px;color:#e8f5ec;font-weight:600">${p.name}</span><span style="text-align:center;font-family:'Cinzel',serif;font-size:13px;color:#5dde8a">${p.totalBoxes}</span><span style="text-align:center;font-family:'Cinzel',serif;font-size:13px;color:#5dde8a">${p.totalAttended}</span><span style="text-align:center;font-size:13px;font-weight:700;color:${color}">${text}</span>`;
+        row.innerHTML = `<span style="font-size:13px;color:#e8f5ec;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0" title="${p.name}">${p.name}</span><span style="text-align:center;font-family:'Cinzel',serif;font-size:13px;color:#5dde8a">${p.totalBoxes}</span><span style="text-align:center;font-family:'Cinzel',serif;font-size:13px;color:#5dde8a">${p.totalAttended}</span><span style="text-align:center;font-size:13px;font-weight:700;color:${color};white-space:nowrap">${text}</span>`;
         row.onclick = () => lookupPlayer(p.name);
         row.onmouseover = () => row.style.background = 'rgba(0,200,80,0.04)';
         row.onmouseout = () => row.style.background = '';
