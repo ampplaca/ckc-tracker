@@ -808,7 +808,7 @@ function renderStats(){
       el.appendChild(note);
 
       const header = document.createElement('div');
-      header.style.cssText = 'display:grid;grid-template-columns:1fr 70px 80px 160px;gap:8px;padding:8px 14px;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(0,200,80,0.4);border-bottom:1px solid rgba(0,200,80,0.1);margin-bottom:4px';
+      header.style.cssText = 'display:grid;grid-template-columns:1fr 50px 60px 1fr;gap:6px;padding:8px 12px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(0,200,80,0.4);border-bottom:1px solid rgba(0,200,80,0.1);margin-bottom:4px';
       header.innerHTML = '<span>Player</span><span style="text-align:center">Boxes</span><span style="text-align:center">Attended</span><span style="text-align:center">Stumps w/o Box</span>';
       el.appendChild(header);
 
@@ -819,7 +819,7 @@ function renderStats(){
         const text = p.stumpsSinceBox === 0 ? (p.totalBoxes > 0 ? 'Just received' : 'No box yet')
           : p.stumpsSinceBox === 1 ? '1 stump ago' : p.stumpsSinceBox + ' stumps ago';
         const row = document.createElement('div');
-        row.style.cssText = 'display:grid;grid-template-columns:1fr 70px 80px 160px;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(0,200,80,0.06);align-items:center;cursor:pointer';
+        row.style.cssText = 'display:grid;grid-template-columns:1fr 50px 60px 1fr;gap:6px;padding:10px 12px;border-bottom:1px solid rgba(0,200,80,0.06);align-items:center;cursor:pointer';
         row.innerHTML = `<span style="font-size:13px;color:#e8f5ec;font-weight:600">${p.name}</span><span style="text-align:center;font-family:'Cinzel',serif;font-size:13px;color:#5dde8a">${p.totalBoxes}</span><span style="text-align:center;font-family:'Cinzel',serif;font-size:13px;color:#5dde8a">${p.totalAttended}</span><span style="text-align:center;font-size:13px;font-weight:700;color:${color}">${text}</span>`;
         row.onclick = () => lookupPlayer(p.name);
         row.onmouseover = () => row.style.background = 'rgba(0,200,80,0.04)';
