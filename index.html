@@ -6,25 +6,13 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; script-src 'unsafe-inline' https://accounts.google.com; style-src 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com; font-src https://fonts.gstatic.com; img-src data: https://*.googleusercontent.com; connect-src https://sheets.googleapis.com https://generativelanguage.googleapis.com https://accounts.google.com https://oauth2.googleapis.com; frame-src https://accounts.google.com"/>
 <title>CKC Alliance Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet"/>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:#050e0a;min-height:100vh;font-family:'Lato',sans-serif;padding:0 0 60px;background-image:radial-gradient(ellipse at 10% 0%,rgba(0,180,80,0.12) 0%,transparent 55%),radial-gradient(ellipse at 90% 100%,rgba(0,120,60,0.10) 0%,transparent 55%)}
-
-/* PW SCREEN */
-#pw-screen{position:fixed;inset:0;background:#050e0a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:1000;background-image:radial-gradient(ellipse at 10% 0%,rgba(0,180,80,0.12) 0%,transparent 55%),radial-gradient(ellipse at 90% 100%,rgba(0,120,60,0.10) 0%,transparent 55%)}
-#pw-screen img{width:80px;height:80px;border-radius:50%;border:2px solid rgba(0,200,80,0.4);box-shadow:0 0 30px rgba(0,200,80,0.2)}
-#pw-screen h1{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:#e8f5ec;letter-spacing:6px;text-shadow:0 0 40px rgba(0,200,80,0.3)}
-#pw-screen p{font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(0,200,80,0.5)}
-#pw-divider{width:180px;height:1px;background:linear-gradient(to right,transparent,rgba(0,200,80,0.5),transparent)}
-#pw-screen input{background:rgba(0,0,0,0.5);border:1px solid rgba(0,200,80,0.25);border-radius:8px;color:#c8e6d2;font-family:'Lato',sans-serif;font-size:14px;padding:11px 16px;outline:none;width:280px;text-align:center;letter-spacing:2px}
-#pw-screen input:focus{border-color:rgba(0,200,80,0.5)}
-.pw-btn{background:rgba(0,200,80,0.12);border:1px solid rgba(0,200,80,0.35);border-radius:8px;color:#5dde8a;font-family:'Lato',sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;padding:10px 30px;cursor:pointer;width:280px}
-.pw-btn:hover{background:rgba(0,200,80,0.2)}
-.pw-btn-secondary{background:rgba(200,230,210,0.06);border:1px solid rgba(200,230,210,0.35);color:rgba(200,230,210,0.75)}
-#pw-error{font-size:12px;color:#E24B4A;letter-spacing:1px;height:16px}
 
 /* HEADER */
 .header{width:100%;padding:28px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;border-bottom:1px solid rgba(0,200,80,0.12);background:rgba(0,0,0,0.3);position:relative;overflow:hidden}
@@ -127,6 +115,27 @@ body{background:#050e0a;min-height:100vh;font-family:'Lato',sans-serif;padding:0
 .history-date{font-family:'Cinzel',serif;font-size:11px;color:rgba(0,200,80,0.4);min-width:110px;flex-shrink:0}
 .all-chips{display:flex;flex-wrap:wrap;gap:6px}
 .all-hint{font-size:10px;letter-spacing:1px;color:rgba(200,230,210,0.2);margin-top:10px;text-transform:uppercase}
+
+/* STATS TABLE */
+.st-group{font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(0,200,80,0.55);margin:22px 0 8px}
+.st-group:first-of-type{margin-top:0}
+.st-row{display:grid;grid-template-columns:minmax(0,1fr) 54px 70px 130px;gap:6px;padding:10px 12px;align-items:center}
+.st-head{padding:8px 12px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(0,200,80,0.4);border-bottom:1px solid rgba(0,200,80,0.1);margin-bottom:4px}
+.st-head span:not(:first-child),.st-num,.st-since{text-align:center}
+.st-body{border-bottom:1px solid rgba(0,200,80,0.06);cursor:pointer}
+.st-body:hover{background:rgba(0,200,80,0.04)}
+.st-name{font-size:13px;color:#e8f5ec;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.st-num{font-family:'Cinzel',serif;font-size:13px;color:#5dde8a}
+.st-since{font-size:13px;font-weight:700;white-space:nowrap}
+@media(max-width:600px){
+  .main{padding:18px 12px 0}
+  .st-row{grid-template-columns:minmax(0,1fr) 34px 44px 92px;gap:4px;padding:9px 6px}
+  .st-head{font-size:8px;letter-spacing:0;padding:6px}
+  .st-name,.st-num{font-size:12px}
+  .st-since{font-size:11px}
+  .nav-btn{padding:12px 16px;letter-spacing:2px}
+  .tab{padding:8px 10px;letter-spacing:1px}
+}
 
 /* ADD FORM */
 .add-form{background:rgba(0,0,0,0.35);border:1px solid rgba(0,200,80,0.12);border-radius:13px;padding:20px;margin-bottom:12px}
@@ -438,18 +447,22 @@ body{background:#050e0a;min-height:100vh;font-family:'Lato',sans-serif;padding:0
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
 const SHEET_ID      = "1e0iy4n-cqsE9s13OypHGtrG0KviBp0vnDcdCwZSFmpc";
-const API_KEY       = "AIzaSyBAqsu6A5gVWIWZyMaDiYYK4qJ3B2qRgF4";
+const API_KEY       = "AIzaSyBAqsu6A5gVWIWZyMaDiYYK4qJ3B2qRgF4"; // read-only; restrict to this site's referrer in Google Cloud Console
 const CLIENT_ID     = "444266138965-rn3ah4hnbma2v5co432nspgq101kd3n8.apps.googleusercontent.com";
 const EVENTS_SHEET  = "Events";
 const REWARDS_SHEET = "Rewards";
 const SD_SHEET         = "Showdown";
 const SD_MEMBERS_SHEET = "Showdown Members";
-const EDITOR_PASS   = "LoveYouMore";
 const OL_ORDER      = ['MSK', 'CKC', '311', '7DS', 'ATL'];
 // ─────────────────────────────────────────────────────────────────────────────
 
 const COL = {red:"#E24B4A",blue:"#378ADD",green:"#639922",purple:"#7F77DD",pink:"#E91E8C"};
 let IS_EDITOR = false, GOOGLE_TOKEN = null, EVENTS = [];
+
+// Escape text before putting it into innerHTML / HTML attributes
+function esc(s){
+  return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
 // OL state
 let currentOL = localStorage.getItem('ckc_ol') || OL_ORDER[1]; // default CKC
@@ -471,7 +484,7 @@ function renderOL(){
   document.getElementById('ol-select').style.display = 'none';
 }
 async function setOL(val){
-  if(!val) return;
+  if(!val || !IS_EDITOR || !OL_ORDER.includes(val)) return;
   currentOL = val;
   localStorage.setItem('ckc_ol', val);
   renderOL();
@@ -488,25 +501,24 @@ async function setOL(val){
 // ── EDITOR LOGIN ──────────────────────────────────────────────────────────────
 function unlock(){
   IS_EDITOR = true;
-  // editor badge always visible
   document.getElementById("btn-add-event").style.display="";
   document.getElementById("add-tab").style.display="";
   document.getElementById("sd-import-btn").style.display="";
   document.getElementById("btn-save-sd").style.display="";
   document.getElementById("sd-history-btn").style.display="";
   document.querySelectorAll('.sd-editor-only').forEach(el=>el.classList.remove('sd-editor-only'));
+  renderOL(); renderEvents(); renderSDMembers();
 }
 
 // ── GOOGLE OAUTH ──────────────────────────────────────────────────────────────
+// Editor mode unlocks only after a successful Google sign-in. Actual write access
+// is enforced by the Google Sheet's own sharing settings.
 function showGoogleSignIn(){
-  const pass = prompt("Enter editor password:");
-  if(!pass) return;
-  if(pass.trim() !== EDITOR_PASS){ alert("Incorrect password."); return; }
-  unlock();
-
+  if(typeof google==='undefined' || !google.accounts){ alert("Google sign-in is still loading. Try again in a moment."); return; }
   const client=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:"https://www.googleapis.com/auth/spreadsheets",callback:(resp)=>{
     if(resp.access_token){
       GOOGLE_TOKEN=resp.access_token;
+      unlock();
       document.getElementById("google-badge").style.display="block";
       document.getElementById("google-badge").textContent="✓ Google connected";
       document.getElementById("editor-badge").textContent="✓ Editor & Google";
@@ -531,6 +543,7 @@ async function loadSheet(){
     if(sheetOL && OL_ORDER.includes(sheetOL)){
       currentOL = sheetOL;
       localStorage.setItem('ckc_ol', sheetOL);
+      renderOL();
     }
     const evRows=(evData.values||[]).slice(2), rwRows=(rwData.values||[]).slice(2);
     const evMap={};
@@ -540,7 +553,7 @@ async function loadSheet(){
       if(!evMap[date]) evMap[date]={date,boxes:[],titles:[],lost:false,org:""};
       if(org) evMap[date].org=org;
       if(colour==="lost"){evMap[date].lost=true;return;}
-      if(colour&&who) evMap[date].boxes.push({who,colour});
+      if(colour&&who&&COL[colour]) evMap[date].boxes.push({who,colour});
     });
     rwRows.forEach(r=>{
       const date=(r[0]||"").trim(), type=(r[1]||"").trim().toLowerCase(), who=(r[2]||"").trim();
@@ -552,7 +565,7 @@ async function loadSheet(){
     dot.className="sync-dot"; txt.textContent="Live — synced "+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
   }catch(e){
     dot.className="sync-dot err";
-    txt.textContent=API_KEY==="AIzaSyBAqsu6A5gVWIWZyMaDiYYK4qJ3B2qRgF4"?"API key not set — showing built-in data":"Sync error: "+e.message;
+    txt.textContent="Sync error: "+e.message+" — showing built-in data";
     loadFallback();
   }
 }
@@ -688,7 +701,7 @@ function showProfile(p,el){
   const rows=[...p.boxes.map(b=>(({date:b.date,chip:makeChip(p.display,b.colour,false,null),ts:new Date(b.date)}  ))),...p.titles.map(d=>(({date:d,chip:makeChip(p.display,null,true,null),ts:new Date(d)}  )))].sort((a,b)=>b.ts-a.ts);
   el.innerHTML="";
   const card=document.createElement("div");card.className="profile-card";
-  card.innerHTML='<div class="profile-name">'+p.display+'</div><div class="profile-stats"><div class="p-stat"><div class="p-stat-val">'+p.boxes.length+'</div><div class="p-stat-label">Boxes</div></div><div class="p-stat"><div class="p-stat-val">'+p.titles.length+'</div><div class="p-stat-label">Titles</div></div><div class="p-stat"><div class="p-stat-val">'+(p.boxes.length+p.titles.length)+'</div><div class="p-stat-label">Total</div></div></div>';
+  card.innerHTML='<div class="profile-name">'+esc(p.display)+'</div><div class="profile-stats"><div class="p-stat"><div class="p-stat-val">'+p.boxes.length+'</div><div class="p-stat-label">Boxes</div></div><div class="p-stat"><div class="p-stat-val">'+p.titles.length+'</div><div class="p-stat-label">Titles</div></div><div class="p-stat"><div class="p-stat-val">'+(p.boxes.length+p.titles.length)+'</div><div class="p-stat-label">Total</div></div></div>';
   rows.forEach(r=>{const row=document.createElement("div");row.className="history-row";const d=document.createElement("span");d.className="history-date";d.textContent=r.date;row.appendChild(d);row.appendChild(r.chip);card.appendChild(row);});
   if(!rows.length){const e=document.createElement("p");e.style.color="rgba(200,230,210,0.3)";e.textContent="No history.";card.appendChild(e);}
   el.appendChild(card);
@@ -799,7 +812,30 @@ function renderStats(){
         return {name, totalBoxes, totalAttended: attended.length, stumpsSinceBox};
       });
 
-      stats.sort((a,b) => b.stumpsSinceBox - a.stumpsSinceBox);
+      // Current stump = the latest date column in Attendance that has at least one check
+      // (later columns with no data yet are ignored)
+      let currentStump = null;
+      if(attendRows.length > 0){
+        attendRows[0].slice(1).forEach((date,i) => {
+          const d = (date||'').trim();
+          if(!d || isNaN(new Date(d))) return;
+          const hasData = attendRows.slice(1).some(r => ['TRUE','1','YES','✓'].includes((r[i+1]||'').trim().toUpperCase()));
+          if(hasData && (!currentStump || new Date(d) > new Date(currentStump))) currentStump = d;
+        });
+      }
+      stats.forEach(p => {
+        const set = attendanceMap[p.name.toLowerCase()];
+        p.atCurrent = !!(currentStump && set && set.has(currentStump));
+      });
+
+      // Longest without a box first; ties -> fewer total boxes, then more stumps attended, then name
+      const byPriority = (a,b) =>
+        b.stumpsSinceBox - a.stumpsSinceBox ||
+        a.totalBoxes - b.totalBoxes ||
+        b.totalAttended - a.totalAttended ||
+        a.name.localeCompare(b.name, undefined, {sensitivity:'base'});
+      const here = stats.filter(p => p.atCurrent).sort(byPriority);
+      const notHere = stats.filter(p => !p.atCurrent).sort(byPriority);
       el.innerHTML = '';
 
       const note = document.createElement('div');
@@ -807,31 +843,81 @@ function renderStats(){
       note.textContent = '📅 Tracking started September 5, 2026';
       el.appendChild(note);
 
-      const header = document.createElement('div');
-      header.style.cssText = 'display:grid;grid-template-columns:1fr 50px 60px 1fr;gap:6px;padding:8px 12px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(0,200,80,0.4);border-bottom:1px solid rgba(0,200,80,0.1);margin-bottom:4px';
-      header.innerHTML = '<span>Player</span><span style="text-align:center">Boxes</span><span style="text-align:center">Attended</span><span style="text-align:center">Stumps w/o Box</span>';
-      el.appendChild(header);
+      function addGroup(title, list){
+        const h = document.createElement('div');
+        h.className = 'st-group';
+        h.textContent = title + ' (' + list.length + ')';
+        el.appendChild(h);
+        const header = document.createElement('div');
+        header.className = 'st-row st-head';
+        header.innerHTML = '<span>Player</span><span>Boxes</span><span>Attended</span><span>Stumps w/o Box</span>';
+        el.appendChild(header);
+        if(!list.length){
+          const e = document.createElement('div');
+          e.className = 'sd-empty';
+          e.textContent = 'Nobody yet';
+          el.appendChild(e);
+        }
+        list.forEach(renderStatRow);
+      }
 
-      stats.forEach(p => {
+      function renderStatRow(p){
         let color = '#5dde8a';
         if(p.stumpsSinceBox >= 4) color = '#E24B4A';
         else if(p.stumpsSinceBox >= 2) color = '#EF9F27';
         const text = p.stumpsSinceBox === 0 ? (p.totalBoxes > 0 ? 'Just received' : 'No box yet')
           : p.stumpsSinceBox === 1 ? '1 stump ago' : p.stumpsSinceBox + ' stumps ago';
         const row = document.createElement('div');
-        row.style.cssText = 'display:grid;grid-template-columns:1fr 50px 60px 1fr;gap:6px;padding:10px 12px;border-bottom:1px solid rgba(0,200,80,0.06);align-items:center;cursor:pointer';
-        row.innerHTML = `<span style="font-size:13px;color:#e8f5ec;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0" title="${p.name}">${p.name}</span><span style="text-align:center;font-family:'Cinzel',serif;font-size:13px;color:#5dde8a">${p.totalBoxes}</span><span style="text-align:center;font-family:'Cinzel',serif;font-size:13px;color:#5dde8a">${p.totalAttended}</span><span style="text-align:center;font-size:13px;font-weight:700;color:${color};white-space:nowrap">${text}</span>`;
+        row.className = 'st-row st-body';
+        row.innerHTML = `<span class="st-name" title="${esc(p.name)}">${esc(p.name)}</span><span class="st-num">${p.totalBoxes}</span><span class="st-num">${p.totalAttended}</span><span class="st-since" style="color:${color}">${text}</span>`;
         row.onclick = () => lookupPlayer(p.name);
-        row.onmouseover = () => row.style.background = 'rgba(0,200,80,0.04)';
-        row.onmouseout = () => row.style.background = '';
         el.appendChild(row);
-      });
+      }
+
+      addGroup(currentStump ? 'At this stump · ' + currentStump : 'At this stump', here);
+      addGroup('Not at this stump', notHere);
 
       if(!stats.length) el.innerHTML = '<div style="color:rgba(200,230,210,0.3);padding:20px;font-size:13px;text-align:center">No data yet — fill in Roster and Attendance tabs.</div>';
     })
-    .catch(e => { el.innerHTML = `<div style="color:#f85149;padding:20px;font-size:13px">Error: ${e.message}</div>`; });
+    .catch(e => { el.innerHTML = `<div style="color:#f85149;padding:20px;font-size:13px">Error: ${esc(e.message)}</div>`; });
 }
 function switchSDTab(t){}
+
+function switchPage(name,btn){
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+name).classList.add("active");
+}
+
+function showAdd(){
+  if(!IS_EDITOR) return;
+  switchTab("add",document.getElementById("add-tab"));
+}
+function cancelAdd(){
+  switchTab("events",document.querySelectorAll(".tab")[0]);
+}
+
+// Import the most recent draw's member list from the "Showdown Members" tab
+async function importSDFromSheet(){
+  if(!IS_EDITOR) return;
+  try{
+    const url=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SD_MEMBERS_SHEET)}?key=${API_KEY}`;
+    const data=await (await fetch(url)).json();
+    if(data.error) throw new Error(data.error.message);
+    const rows=(data.values||[]).filter(r=>r[0]&&r[1]&&!isNaN(parseInt(r[2])));
+    if(!rows.length){alert("No saved members found in the sheet.");return;}
+    const latest=rows.reduce((l,r)=>new Date(r[0])>new Date(l)?r[0]:l,rows[0][0]);
+    let added=0;
+    rows.filter(r=>r[0]===latest).forEach(r=>{
+      const name=String(r[1]).trim(), pts=parseInt(r[2]);
+      if(!name||sdMembers.find(m=>m.name.toLowerCase()===name.toLowerCase())) return;
+      sdMembers.push({name,pts}); added++;
+    });
+    saveSDMembers(); renderSDMembers(); updateDrawButtons();
+    alert("Imported "+added+" members from "+latest+".");
+  }catch(e){ alert("Import failed: "+e.message); }
+}
 
 // ── LOST TOGGLE ───────────────────────────────────────────────────────────────
 function toggleLost(){const cb=document.getElementById("f-lost");cb.checked=!cb.checked;toggleLostFields();}
@@ -839,6 +925,7 @@ function toggleLostFields(){document.getElementById("reward-fields").style.displ
 
 // ── SAVE STUMP EVENT ──────────────────────────────────────────────────────────
 async function saveEvent(){
+  if(!IS_EDITOR) return;
   const date=document.getElementById("f-date").value;
   if(!date){alert("Please enter a date.");return;}
   const fmt=date;
@@ -883,6 +970,7 @@ let leafWinners=[], foodWinners=[], drawnNames=new Set(), isDrawing=false;
 function saveSDMembers(){ localStorage.setItem('sd_members', JSON.stringify(sdMembers)); }
 
 function addSDMember(){
+  if(!IS_EDITOR) return;
   const name=document.getElementById("sd-name").value.trim();
   const pts=parseInt(document.getElementById("sd-pts").value);
   if(!name){alert("Enter a player name.");return;}
@@ -918,18 +1006,18 @@ function renderSDMembers(){
   list.innerHTML=sdMembers.sort((a,b)=>b.pts-a.pts).map(m=>{
     const elig=m.pts>=2000&&m.pts<=3599;
     return `<div class="sd-member-row">
-      <span class="sd-member-name">${m.name}</span>
-      <span class="sd-member-pts">${m.pts.toLocaleString()}</span>
+      <span class="sd-member-name">${esc(m.name)}</span>
+      <span class="sd-member-pts">${Number(m.pts).toLocaleString()}</span>
       <span class="sd-member-eligible ${elig?'eligible':'ineligible'}">${elig?'Eligible':'Ineligible'}</span>
-      ${IS_EDITOR?`<button class="btn-sm danger" style="padding:2px 8px;font-size:10px;margin-left:6px" onclick="removeSDMember('${m.name}')">✕</button>`:''}
+      ${IS_EDITOR?`<button class="btn-sm danger" style="padding:2px 8px;font-size:10px;margin-left:6px" data-name="${esc(m.name)}" onclick="removeSDMember(this.dataset.name)">✕</button>`:''}
     </div>`;
   }).join('');
   const eligMembers=eligible.sort((a,b)=>b.pts-a.pts);
   eligList.innerHTML=eligMembers.length?eligMembers.map(m=>{
     const drawn=drawnNames.has(m.name);
     return `<div class="sd-member-row" style="${drawn?'opacity:0.3':''}">
-      <span class="sd-member-name">${drawn?'✓ ':''}${m.name}</span>
-      <span class="sd-member-pts">${m.pts.toLocaleString()}</span>
+      <span class="sd-member-name">${drawn?'✓ ':''}${esc(m.name)}</span>
+      <span class="sd-member-pts">${Number(m.pts).toLocaleString()}</span>
     </div>`;
   }).join(''):'<div class="sd-empty">No eligible members</div>';
 }
@@ -949,7 +1037,7 @@ function updateDrawButtons(){
 }
 
 async function drawWinner(pool){
-  if(isDrawing)return;
+  if(isDrawing||!IS_EDITOR)return;
   const eligible=getEligible();
   if(!eligible.length){alert("No eligible members left!");return;}
   if(pool==='leaf'&&leafWinners.length>=5){alert("Already have 5 leaf winners!");return;}
@@ -990,8 +1078,8 @@ async function drawWinner(pool){
 function renderWinners(){
   const lw=document.getElementById("leaf-winners");
   const fw=document.getElementById("food-winners");
-  lw.innerHTML=leafWinners.map((n,i)=>`<div class="winner-row"><span class="winner-num">#${i+1}</span><span class="winner-name">${n}</span><span class="winner-badge leaf-badge">Leaf</span></div>`).join('');
-  fw.innerHTML=foodWinners.map((n,i)=>`<div class="winner-row"><span class="winner-num">#${i+1}</span><span class="winner-name">${n}</span><span class="winner-badge food-badge">Food</span></div>`).join('');
+  lw.innerHTML=leafWinners.map((n,i)=>`<div class="winner-row"><span class="winner-num">#${i+1}</span><span class="winner-name">${esc(n)}</span><span class="winner-badge leaf-badge">Leaf</span></div>`).join('');
+  fw.innerHTML=foodWinners.map((n,i)=>`<div class="winner-row"><span class="winner-num">#${i+1}</span><span class="winner-name">${esc(n)}</span><span class="winner-badge food-badge">Food</span></div>`).join('');
 }
 
 function resetDraw(){
@@ -1021,20 +1109,20 @@ function loadSDHistory(){
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
             <div>
               <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(0,200,80,0.4);margin-bottom:6px">Eligible (${eligible.length})</div>
-              ${eligible.sort((a,b)=>b.pts-a.pts).map(m=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid rgba(0,200,80,0.05)"><span style="color:#c8e6d2">${m.name}</span><span style="color:#5dde8a;font-family:'Cinzel',serif">${m.pts.toLocaleString()}</span></div>`).join('')}
+              ${eligible.sort((a,b)=>b.pts-a.pts).map(m=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid rgba(0,200,80,0.05)"><span style="color:#c8e6d2">${esc(m.name)}</span><span style="color:#5dde8a;font-family:'Cinzel',serif">${Number(m.pts).toLocaleString()}</span></div>`).join('')}
             </div>
             <div>
               <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,230,210,0.25);margin-bottom:6px">Ineligible (${ineligible.length})</div>
-              ${ineligible.sort((a,b)=>b.pts-a.pts).map(m=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid rgba(0,200,80,0.05)"><span style="color:rgba(200,230,210,0.35)">${m.name}</span><span style="color:rgba(200,230,210,0.3);font-family:'Cinzel',serif">${m.pts.toLocaleString()}</span></div>`).join('')}
+              ${ineligible.sort((a,b)=>b.pts-a.pts).map(m=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid rgba(0,200,80,0.05)"><span style="color:rgba(200,230,210,0.35)">${esc(m.name)}</span><span style="color:rgba(200,230,210,0.3);font-family:'Cinzel',serif">${Number(m.pts).toLocaleString()}</span></div>`).join('')}
             </div>
           </div>
         </div>
       </div>` : '';
     return `<div class="sd-history-card">
-      <div class="sd-history-date">${h.date}</div>
+      <div class="sd-history-date">${esc(h.date)}</div>
       <div class="sd-winner-chips">
-        ${h.leaf.map(n=>`<span class="sd-winner-chip leaf-chip">&#127795; ${n}</span>`).join('')}
-        ${h.food.map(n=>`<span class="sd-winner-chip food-chip">&#127859; ${n}</span>`).join('')}
+        ${h.leaf.map(n=>`<span class="sd-winner-chip leaf-chip">&#127795; ${esc(n)}</span>`).join('')}
+        ${h.food.map(n=>`<span class="sd-winner-chip food-chip">&#127859; ${esc(n)}</span>`).join('')}
       </div>
       ${membersHtml}
     </div>`;
@@ -1042,6 +1130,7 @@ function loadSDHistory(){
 }
 
 async function saveSDEvent(){
+  if(!IS_EDITOR) return;
   if(!leafWinners.length&&!foodWinners.length){alert("Draw some winners first!");return;}
   const dateInput=document.getElementById('sd-draw-date').value.trim();
   const date=dateInput||new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
@@ -1069,11 +1158,25 @@ async function saveSDEvent(){
 }
 
 // ── SCREENSHOT READER ─────────────────────────────────────────────────────────
-const GEMINI_KEY = 'AQ.Ab8RN6Jtor374UJ1QNb7V4ownTNZacPGg6XoH93I2wcs46hs5g';
+// The Gemini key is NOT stored in this file. It is requested once per browser
+// session when an editor uploads a screenshot, and kept only in sessionStorage.
+function getGeminiKey(){
+  let k = null;
+  try{ k = sessionStorage.getItem('ckc_gemini_key'); }catch(e){}
+  if(!k){
+    k = (prompt('Enter Gemini API key (kept only for this browser tab):')||'').trim();
+    if(k){ try{ sessionStorage.setItem('ckc_gemini_key', k); }catch(e){} }
+  }
+  return k;
+}
 
 async function handleScreenshot(input) {
+  if(!IS_EDITOR) return;
   const file = input.files[0];
   if(!file) return;
+
+  const geminiKey = getGeminiKey();
+  if(!geminiKey){ setSSStatus('Gemini key required.', true); input.value=''; return; }
 
   const reader = new FileReader();
   reader.onload = e => {
@@ -1095,10 +1198,10 @@ async function handleScreenshot(input) {
 
   try {
     const response = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_KEY,
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': geminiKey },
         body: JSON.stringify({
           contents: [{
             parts: [
@@ -1111,6 +1214,12 @@ async function handleScreenshot(input) {
     );
 
     const data = await response.json();
+    if(data.error){
+      if(response.status===400||response.status===401||response.status===403){ try{ sessionStorage.removeItem('ckc_gemini_key'); }catch(e){} }
+      setSSStatus('Gemini error: ' + (data.error.message||response.status), true);
+      input.value = '';
+      return;
+    }
     const text = ((data.candidates || [])[0] && data.candidates[0].content && data.candidates[0].content.parts || []).map(p => p.text || '').join('');
 
     let players;
@@ -1133,7 +1242,7 @@ async function handleScreenshot(input) {
 
     let added = 0, skipped = 0;
     players.forEach(p => {
-      const name = (p.name || '').trim();
+      const name = String(p.name || '').trim();
       const pts = parseInt(p.pts);
       if(!name || isNaN(pts)) return;
       if(sdMembers.find(m => m.name.toLowerCase() === name.toLowerCase())) { skipped++; return; }
@@ -1155,11 +1264,11 @@ async function handleScreenshot(input) {
   }
 }
 
-function setSSStatus(msg, isError) {{
+function setSSStatus(msg, isError) {
   const el = document.getElementById('ss-status');
   el.textContent = msg;
   el.style.color = isError ? 'rgba(226,75,74,0.7)' : 'rgba(0,200,80,0.5)';
-}}
+}
 
 
 // ── EDIT MODAL ────────────────────────────────────────────────────────────────
@@ -1196,6 +1305,7 @@ function toggleEditLostFields(){
 }
 
 async function saveEditedEvent(){
+  if(!IS_EDITOR) return;
   const idx = EVENTS.findIndex(e=>e.date===editingEventDate);
   if(idx===-1){alert('Event not found.');return;}
 
