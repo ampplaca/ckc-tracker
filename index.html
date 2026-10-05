@@ -869,9 +869,9 @@ function renderStats(){
       }
 
       function renderStatRow(p){
-        let color = '#5dde8a';
-        if(p.stumpsSinceBox >= 4) color = '#E24B4A';
-        else if(p.stumpsSinceBox >= 2) color = '#EF9F27';
+        // Green -> red scale by stumps without a box: 0/1 green, 2 lime, 3 yellow, 4 orange, 5+ red
+        const SINCE_COLORS = ['#5dde8a','#5dde8a','#a8de4a','#f0d23c','#f08a2a','#E24B4A'];
+        const color = SINCE_COLORS[Math.min(p.stumpsSinceBox, 5)];
         const gotLastStump = previousStumpDay !== null && p.lastBoxDate && dayOf(p.lastBoxDate) === previousStumpDay;
         const text = gotLastStump ? 'Got last stump'
           : p.stumpsSinceBox === 0 ? (p.totalBoxes > 0 ? 'Just received' : 'No box yet')
